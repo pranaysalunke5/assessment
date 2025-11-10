@@ -1,0 +1,31 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: assessment_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/assessment_db"
+      JWT_SECRET: "e61cde874ac9cc8d43a5e806a114ed8b9052e0524750eaaba37d43fd6a609c8401aad030b1f7186e911b413ba8101de6b7339243611ffbcee94ee568b3f01231"
+      BASE_URL: "http://localhost:4000"
+      UPLOAD_DIR: "./uploads"
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./:/app
+      - ./uploads:/app/uploads
+
+volumes:
+  pgdata:

@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  password  String
+  role      String     @default("user")
+  createdAt DateTime   @default(now())
+  documents Document[] @relation("UserDocuments")
+  files     FileMeta[] @relation("UserFiles")
+}
+
+model Document {
+  id        Int      @id @default(autoincrement())
+  title     String
+  html      String   @db.Text
+  pdfUrl    String?
+  ownerId   Int
+  owner     User     @relation("UserDocuments", fields: [ownerId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model FileMeta {
+  id         Int      @id @default(autoincrement())
+  filename   String
+  url        String
+  mimeType   String
+  size       Int
+  uploadedBy Int
+  uploader   User     @relation("UserFiles", fields: [uploadedBy], references: [id])
+  createdAt  DateTime @default(now())
+}
