@@ -31,7 +31,23 @@ The project includes a `Dockerfile` and `docker-compose.yml` to set up the appli
     cd assessment
     ```
 
+2.  **Configure Environment:**
+    * Copy the sample file to use for your Docker environment:
+        ```bash
+        cp .env.sample .env
+        ```
 
+3.  **Start Services & Build:**
+    * This command builds the Node.js image and starts both the application (`app`) and the database (`db`).
+    ```bash
+    docker-compose up --build -d
+    ```
+
+4.  **Run Migrations:** (Crucial: Initializes the database schema)
+    * Execute the Prisma migrations inside the running application container:
+    ```bash
+    docker-compose exec app npx prisma migrate deploy
+    ```
 
 ### Access
 
